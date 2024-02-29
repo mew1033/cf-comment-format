@@ -51,7 +51,7 @@ runs:
 
     - name: Build the comment
       id: build-comment
-      run: python "src/build-markdown.py"
+      run: python "$GITHUB_ACTION_PATH/src/build-markdown.py"
       shell: bash
       env:
         CHANGES_JSON_FILE: ${{ inputs.changes_json_file }}
