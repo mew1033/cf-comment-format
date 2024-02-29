@@ -1,0 +1,58 @@
+name: 'Build Changeset Comment'
+description: Github Action that creates a GFMD comment with Cloudformation changeset details.
+
+inputs:
+  changes_json_file:
+    description: Pass the path to the changeset file
+    required: false
+    type: string
+  changeset_arn:
+    description: Pass the ARN of the changeset you want to describe.
+    required: false
+    type: string
+
+outputs:
+  comment:
+    description: The comment to be posted on the PR
+    value: ${{ steps.build-comment.outputs.comment }}
+
+runs:
+  using: 'composite'
+  steps:
+    - name: Check inputs
+      shell: bash
+      run: |
+        changes_json_file="${{ inputs.changes_json_file }}"
+        changeset_arn="${{ inputs.changeset_arn }}"
+
+        if [[ -n "$changes_json_file" && -n "$changeset_arn" ]]; then
+            echo "Please only specify changes_json_file OR changeset_arn, not both."
+            exit 1
+        elif [[ -z "$changes_json_file" && -z "$changeset_arn" ]]; then
+            echo "Please specify either changes_json_file or changeset_arn."
+            exit 1
+        fi
+
+    - name: Install Python
+      uses: actions/setup-python@v4
+      with:
+        python-version: '3.12'
+
+    - name: Get the changeset details
+      id: get-changeset-details
+      if: inputs.changeset_arn != ''
+      shell: bash
+      run: |
+        echo 'raw_changes<<EOF' >> $GITHUB_OUTPUT
+        aws cloudformation describe-change-set --region $(echo $ARN | cut -d ':' -f 4) --change-set-name $ARN >> $GITHUB_OUTPUT
+        echo 'EOF' >> $GITHUB_OUTPUT
+      env:
+        ARN: ${{ inputs.changeset_arn }}
+
+    - name: Build the comment
+      id: build-comment
+      run: python "src/build-markdown.py"
+      shell: bash
+      env:
+        CHANGES_JSON_FILE: ${{ inputs.changes_json_file }}
+        RAW_CHANGES: ${{ steps.get-changeset-details.outputs.raw_changes }}
