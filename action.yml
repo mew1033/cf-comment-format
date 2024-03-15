@@ -5,11 +5,9 @@ inputs:
   changes_json_file:
     description: Pass the path to the changeset file
     required: false
-    type: string
   changeset_arn:
     description: Pass the ARN of the changeset you want to describe.
     required: false
-    type: string
 
 outputs:
   comment:
