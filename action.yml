@@ -1,5 +1,10 @@
-name: 'Build Changeset Comment'
+name: Build Changeset Comment
+author: Chandler Newby
 description: Github Action that creates a GFMD comment with Cloudformation changeset details.
+
+branding:
+  icon: cloud
+  color: orange
 
 inputs:
   changes_json_file:
