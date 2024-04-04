@@ -25,7 +25,10 @@ def get_details(details):
     return f"<ul>{''.join(out)}</ul>"
 
 
-def get_replace(replace):
+def get_replace(resource_change):
+    if resource_change["Action"] != "Modify":
+        return "NA"
+    replace = resource_change.get("Replacement", "Unknown")
     if replace == "True":
         return f":recycle:{replace}"
     return replace
@@ -61,7 +64,7 @@ def main():
             action=get_action(x["ResourceChange"]["Action"]),
             id=x["ResourceChange"]["LogicalResourceId"],
             type=x["ResourceChange"]["ResourceType"],
-            replacement=get_replace(x["ResourceChange"]["Replacement"]),
+            replacement=get_replace(x["ResourceChange"]),
             details=get_details(x["ResourceChange"]["Details"]),
         )
 
