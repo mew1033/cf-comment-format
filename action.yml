@@ -16,8 +16,11 @@ inputs:
 
 outputs:
   comment:
-    description: The comment to be posted on the PR
+    description: The markdown formatted description of the changeset
     value: ${{ steps.build-comment.outputs.comment }}
+  comment_json:
+    description: The markdown formatted description of the changeset, in an escaped json string
+    value: ${{ steps.build-comment.outputs.comment_json }}
 
 runs:
   using: 'composite'

@@ -79,7 +79,10 @@ def main():
         f.write(out)
         f.write("\n")
         f.write(str(delimiter))
+        f.write("\n")
 
+        # Also write the markdown comment as an escaped json compatible string.
+        f.write(f"comment_json={json.dumps(out)}\n")
     return out
 
 

@@ -9,7 +9,8 @@ This GitHub Action creates a GitHub Flavored Markdown (GFMD) comment with Cloudf
 
 ## Outputs
 
-- `comment`: The comment to be posted on the PR.
+- `comment`: The markdown of the comment.
+- `comment_json`: The markdown of the comment, in an escaped json string.
 
 ## Example usage
 
